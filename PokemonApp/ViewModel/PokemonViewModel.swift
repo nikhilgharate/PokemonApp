@@ -3,16 +3,94 @@
 //  PokemonApp
 //
 //  Created by iAURO on 29/07/24.
-//
 
 import SwiftUI
 
-struct PokemonViewModel: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+class PokemonviewModel: ObservableObject{
+    @Published var pokemon = [Pokemon]()
+    let baseUrl = "https://pokedex-bb36f.firebaseio.com/pokemon.json"
+    
+    init()
+    {
+//        fetchPokemon()
+        
+        fetchPokemon { success in
+                   // Handle completion if needed
+                   if !success {
+                       print("Failed to fetch Pokémon data")
+                   }
+               }
+    }
+    
+//    
+//    func fetchPokemon(){
+//        guard let url = URL(string: baseUrl) else {return}
+//        URLSession.shared.dataTask(with: url){( data,response,error) in
+//            guard let data = data?.parseData(removeString: "null,") else {return}
+//            guard let pokemon = try? JSONDecoder().decode([Pokemon].self, from: data) else {return}
+//            
+//            DispatchQueue.main.async {
+//                self.pokemon = pokemon
+//            }
+//            
+//                    
+//        }.resume()
+//    }
+    
+    func fetchPokemon(completion: @escaping (Bool) -> Void) {
+           guard let url = URL(string: baseUrl) else {
+               completion(false)
+               return
+           }
+           
+           URLSession.shared.dataTask(with: url) { (data, response, error) in
+               if let error = error {
+                   print("Error fetching data: \(error.localizedDescription)")
+                   completion(false)
+                   return
+               }
+               
+               guard let data = data?.parseData(removeString: "null,") else {
+                   completion(false)
+                   return
+               }
+               
+               do {
+                   let pokemonList = try JSONDecoder().decode([Pokemon].self, from: data)
+                   DispatchQueue.main.async {
+                       self.pokemon = pokemonList
+                       completion(true)
+                   }
+               } catch {
+                   print("Error decoding data: \(error.localizedDescription)")
+                   completion(false)
+               }
+           }.resume()
+       }
+    
+    
+    func backgroundColor(forType type:String) ->UIColor{
+        switch type{
+        case "fire":return .systemRed
+        case "poison":return .systemGreen
+        case "water":return .systemBlue
+        case "electric":return .systemYellow
+        case "psychic":return .systemPurple
+        case "normal":return .systemOrange
+        case "ground":return .systemGray
+        case "flying":return .systemTeal
+        case "fairy":return .systemPink
+       
+        default: return .systemIndigo
+        }
     }
 }
-
-#Preview {
-    PokemonViewModel()
+extension Data{
+    func parseData(removeString string:String) -> Data?
+    {
+        let dataAsString = String(data:self,encoding: .utf8)
+        let parsedDataString = dataAsString?.replacingOccurrences(of: string, with: "")
+        guard let data = parsedDataString?.data(using: .utf8) else {return nil}
+        return data
+    }
 }
