@@ -4,38 +4,50 @@
 //
 //  Created by iAURO on 02/08/24.
 //
-
-import XCTest
-
-final class PokemonCellUITests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
-    }
-}
+//
+//import SwiftUI
+//import XCTest
+//@testable import PokemonApp
+//import Kingfisher
+//
+//// Mock data for testing
+//struct MockData {
+//    static let mockPokemon = Pokemon(id: 1, name: "Pikachu", imageUrl: "https://example.com/pikachu.png", type: "electric", description: "Pikachu is an Electric-type Pokémon.", height: 4, weight: 60)
+//}
+//
+//final class PokemonCellUITests: XCTestCase {
+//    
+//    var viewModel: PokemonviewModel!
+//        var pokemonCell: PokemonCell!
+//        var hostingController: UIHostingController<PokemonCell>!
+//    
+//
+//    override func setUp() {
+//        super.setUp()
+//                viewModel = PokemonviewModel()
+//                pokemonCell = PokemonCell(pokemon: MockData.mockPokemon, viewModel: viewModel)
+//                hostingController = UIHostingController(rootView: pokemonCell)
+//      
+//    }
+//
+//    override func tearDown()  {
+//        viewModel = nil
+//               pokemonCell = nil
+//               hostingController = nil
+//               super.tearDown()
+//    }
+//    
+//    func testBackgroundColor() {
+//           let expectedColor = Color(viewModel.backgroundColor(forType: MockData.mockPokemon.type))
+//           XCTAssertEqual(pokemonCell.backgroundColor, expectedColor)
+//       }
+//
+////    // Test the initialization and basic properties of the view
+////        func testPokemonCellInitialization() {
+////            XCTAssertEqual(pokemonCell.pokemon.id, MockData.mockPokemon.id)
+////            XCTAssertEqual(pokemonCell.pokemon.name, MockData.mockPokemon.name)
+////            XCTAssertEqual(pokemonCell.pokemon.type, MockData.mockPokemon.type)
+////        }
+//
+//    }
+//

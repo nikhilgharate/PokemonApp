@@ -6,43 +6,49 @@
 
 import SwiftUI
 
+// View for displaying the list of Pokémon
 struct PokemonView: View {
+    // Define the grid layout with two flexible columns
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    // State variable to manage the loading state
     @State private var isLoading = true
     
+    // ObservedObject for the view model
     @ObservedObject var viewModel = PokemonviewModel()
-
+    
     var body: some View {
-        NavigationView {
-            Group {
-                if isLoading {
-                    ProgressView("Loading Pokemon...")
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .onAppear {
-                            viewModel.fetchPokemon { success in
-                                isLoading = !success
-                            }
+        Group {
+            // Show loading indicator if data is loading
+            if isLoading {
+                ProgressView("Loading Pokemon...")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .onAppear {
+                        // Fetch Pokémon data and update loading state
+                        viewModel.fetchPokemon { success in
+                            isLoading = !success
                         }
-                } else {
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(viewModel.pokemon) { pokemon in
-                                NavigationLink(
-                                    destination: PokemonDetail(pokemon: pokemon),
-                                    label: {
-                                        PokemonCell(pokemon: pokemon, viewModel: viewModel)
-                                    })
-                                .foregroundColor(.black)
-                            }
+                    }
+            } else {
+                // Show grid of Pokémon once data is loaded
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(viewModel.pokemon) { pokemon in
+                            NavigationLink(
+                                destination: PokemonDetail(pokemon: pokemon),
+                                label: {
+                                    PokemonCell(pokemon: pokemon, viewModel: viewModel)
+                                })
+                            .foregroundColor(.black)
                         }
                     }
                 }
             }
-            .navigationTitle("Pokemon")
         }
+        .navigationTitle("Pokemon")
     }
 }
 
+// Back button component
 struct BackButton: View {
     let action: () -> Void
     var body: some View {
@@ -56,6 +62,7 @@ struct BackButton: View {
     }
 }
 
+// Preview provider for the PokemonView
 struct PokemonView_Previews: PreviewProvider {
     static var previews: some View {
         PokemonView()

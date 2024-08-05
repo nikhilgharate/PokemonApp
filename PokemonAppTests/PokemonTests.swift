@@ -4,32 +4,59 @@
 //
 //  Created by iAURO on 31/07/24.
 //
-
 import XCTest
+@testable import PokemonApp
 
-final class PokemonModelTests: XCTestCase {
+class PokemonTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // Sample JSON for testing
+    let validPokemonJSON = """
+    {
+        "id": 1,
+        "name": "Bulbasaur",
+        "imageUrl": "https://example.com/bulbasaur.png",
+        "type": "poison",
+        "description": "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.",
+        "height": 70,
+        "weight": 69
+    }
+    """.data(using: .utf8)!
+    
+    let invalidPokemonJSON = """
+    {
+        "id": "one",
+        "name": "Bulbasaur",
+        "imageUrl": "https://example.com/bulbasaur.png",
+        "type": "poison",
+        "description": "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.",
+        "height": 70,
+        "weight": 69
+    }
+    """.data(using: .utf8)!
+
+    // Test for successful decoding of valid JSON
+    func testDecodingValidPokemonJSON() throws {
+        // Attempt to decode the sample JSON
+        let pokemon = try JSONDecoder().decode(Pokemon.self, from: validPokemonJSON)
+        
+        // Assert that the properties are correctly decoded
+        XCTAssertEqual(pokemon.id, 1)
+        XCTAssertEqual(pokemon.name, "Bulbasaur")
+        XCTAssertEqual(pokemon.imageUrl, "https://example.com/bulbasaur.png")
+        XCTAssertEqual(pokemon.type, "poison")
+        XCTAssertEqual(pokemon.description, "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.")
+        XCTAssertEqual(pokemon.height, 70)
+        XCTAssertEqual(pokemon.weight, 69)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    // Test for failing decoding of invalid JSON
+    func testDecodingInvalidPokemonJSON() {
+        // Assert that decoding invalid JSON throws a typeMismatch error
+        XCTAssertThrowsError(try JSONDecoder().decode(Pokemon.self, from: invalidPokemonJSON)) { error in
+            guard case DecodingError.typeMismatch = error else {
+                XCTFail("Expected type mismatch error, but got \(error)")
+                return
+            }
         }
     }
-
 }

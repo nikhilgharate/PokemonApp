@@ -5,14 +5,8 @@
 //  Created by iAURO on 31/07/24.
 //
 
-import SwiftUI
+import Foundation
 
-struct Constants: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    Constants()
+struct API {
+    static let baseUrl = "https://pokedex-bb36f.firebaseio.com/pokemon.json"
 }
